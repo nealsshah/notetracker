@@ -29,3 +29,10 @@ def sortNotes(notes,key,order):
         notes[i], notes[min_idx] = notes[min_idx], notes[i]
 
     return notes
+
+def findNote(id, notes):
+    for note in notes:
+        noteId = str(note["id"])
+        if id in noteId:
+            return note
+    return None
