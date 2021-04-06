@@ -6,7 +6,7 @@
 #   Note Statistics
 #   Quit
 
-from note import readNotes,printNotes,sortNotes
+from note import readNotes,printNotes,sortNotes, findNote
 import json
 import subprocess
 from time import time_ns
@@ -16,12 +16,13 @@ subprocess.run(["cls"], shell=True)
 
 
 def getMainMenuOpt():
-    options = ["new", "view", "delete", "stats", "quit"]
+    options = ["new", "view", "edit", "delete", "stats", "quit"]
     print("  1) New Note")
-    print("  2) View/Edit Notes")
-    print("  3) Delete Note")
-    print("  4) Note Statistics")
-    print("  5) Quit")
+    print("  2) View Notes")
+    print("  3) Edit a Note")
+    print("  4) Delete Note")
+    print("  5) Note Statistics")
+    print("  6) Quit")
     print()
     choice = int(input("Select an Option: "))
     return options[choice-1]
@@ -174,7 +175,38 @@ def main():
 
             printNotes(sortedNotes)
 
-            
+        if opt == "edit":
+            subprocess.run("cls", shell=True)
+            print("* * Select a Note * *", "\n")
+            userSelectionId = input("Input Note ID: ")
+
+            foundNote = findNote(userSelectionId, notesList)
+
+            print("-"*25)
+
+            #revise selected note title with desired update
+            print("Title: ", "\n", "    ", foundNote["title"])
+            titleEdit = input("New Title? (input here): ")
+            if titleEdit != "":
+                foundNote["title"] = titleEdit
+
+            #revise selected note categories with desired update
+            print("\n")
+            print("Categories: ", "\n", "    ", foundNote["categories"])
+            categoriesEdit = input("New Categories? (input here): ").split(",")
+            if categoriesEdit != "":
+                foundNote["categories"] = categoriesEdit
+
+            #revise selected note body with desired update
+            print("\n")
+            print("body: ", "\n", "    ", foundNote["body"])
+            bodyEdit = input("New Body? (input here) ")
+            if bodyEdit != "":
+                foundNote["body"] = bodyEdit
+
+            #updates selected note date to current time if edits occur
+            if titleEdit != "" or categoriesEdit != "" or bodyEdit != "":
+                foundNote["date"] = time_ns() #in nanoseconds
 
         if opt == "delete":
             print ("Delete a note")
