@@ -7,11 +7,20 @@ def readNotes(f):
 def printNotes(notes):
     for note in notes:
         print("-"*25, "\n")
-        print("id: ", note["id"], "\n")
-        print("Title: ","\n"," ", note["title"], "\n")
+        print("id: ", str(note["id"])[-7:], "\n")
         print("Date: ","\n"," ", datetime.fromtimestamp(note["date"] / 1e9).strftime("%m-%d-%Y %H:%M:%S"), "\n")
+        print("Title: ","\n"," ", note["title"], "\n")
         print("Category: ", "\n"," ", ", ".join(note["categories"]), "\n")
         print("Body: ", "\n"," ", note["body"], "\n")
+
+def printNoteSingle(note):
+        print("-"*25, "\n")
+        print("id: ", str(note["id"])[-7:], "\n")
+        print("Date: ","\n"," ", datetime.fromtimestamp(note["date"] / 1e9).strftime("%m-%d-%Y %H:%M:%S"), "\n")
+        print("Title: ","\n"," ", note["title"], "\n")
+        print("Category: ", "\n"," ", ", ".join(note["categories"]), "\n")
+        print("Body: ", "\n"," ", note["body"], "\n")
+
 
 def sortNotes(notes,key,order):
 
