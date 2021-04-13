@@ -6,7 +6,7 @@
 #   Note Statistics
 #   Quit
 
-from note import readNotes,printNotes,sortNotes, findNote
+from note import readNotes,printNotes,sortNotes,findNote
 import json
 import subprocess
 from time import time_ns
@@ -30,12 +30,7 @@ def getMainMenuOpt():
 def getViewMenuOpt():
     sortOptions = ["date", "title"]
     filterOptions = ["category", "date", "title", "body"]
-    # BUG with following: if sortQuerry or filterQuerry ==  variation of "no" -> error
-        # SOLUTION: move if byDate - if byTitle within if sortQuerry | move if filtCategory - if filtBody within
-        # if filterQuerry
-            # new BUG: current options {} placement resets user choices
-                # SOLUTION: move options {} to beginning of function
-                    # see myEdits.py file
+
     byDate = "no"
     byTitle = "no"
     order = "asc"
@@ -48,7 +43,7 @@ def getViewMenuOpt():
     sortQuerry = input("Would you like to sort? ")
     if sortQuerry == "y" or sortQuerry == "Y" or sortQuerry == "yes" or sortQuerry == "Yes":
         byDate = input("  By Date? ")
-        if byDate == "n" or byDate == "N" or byDate == "No" or byDate == "no":
+        if byDate == "n" or byDate == "N" or byDate == "No" or byDate == "no" or byDate == "":
             byTitle = input("  By Title? ")
         order = input("  Direction? (asc/desc) ")
     fitlerQuerry = input("Would you like to filter? ")
@@ -103,7 +98,6 @@ def getViewMenuOpt():
 
 def intersect(aList, bList):
     return [a for a in aList if a in bList]
-
 
 
 
@@ -177,29 +171,31 @@ def main():
 
         if opt == "edit":
             subprocess.run("cls", shell=True)
-            print("* * Select a Note * *", "\n")
+            printNotes(notesList)
+            print("-"*25, "\n"*3)
+            print("* * Select a Note to Edit* *", "\n")
             userSelectionId = input("Input Note ID: ")
 
             foundNote = findNote(userSelectionId, notesList)
-
+            print("\n"*2, "...note found...", "\n")
             print("-"*25)
 
             #revise selected note title with desired update
-            print("Title: ", "\n", "    ", foundNote["title"])
+            print("Title: ", "\n", "    ", foundNote["title"], "\n")
             titleEdit = input("New Title? (input here): ")
             if titleEdit != "":
                 foundNote["title"] = titleEdit
 
             #revise selected note categories with desired update
             print("\n")
-            print("Categories: ", "\n", "    ", foundNote["categories"])
+            print("Categories: ", "\n", "    ", foundNote["categories"], "\n")
             categoriesEdit = input("New Categories? (input here): ").split(",")
             if categoriesEdit != "":
                 foundNote["categories"] = categoriesEdit
 
             #revise selected note body with desired update
             print("\n")
-            print("body: ", "\n", "    ", foundNote["body"])
+            print("body: ", "\n", "    ", foundNote["body"], "\n")
             bodyEdit = input("New Body? (input here) ")
             if bodyEdit != "":
                 foundNote["body"] = bodyEdit
@@ -209,9 +205,26 @@ def main():
                 foundNote["date"] = time_ns() #in nanoseconds
 
         if opt == "delete":
-            print ("Delete a note")
+            subprocess.run("cls", shell=True)
+            printNotes(notesList)
+            print("-"*25, "\n"*3)
+            print("* * Select a Note to Delete* *", "\n")
+            userSelectionId = input("Input Note ID: ")
+
+            foundNote = findNote(userSelectionId, notesList)
+            print("\n"*2, "...note found...", "\n")
+
+
+            printNotes([foundNote])
+
+            confirm = input("Confirm note deletion? (y/n): ")
+            if confirm == "Y" or confirm == "y" or confirm =="yes" or confirm == "Yes":
+                notesList.remove(foundNote) #removes selected note from notesList
+            else:
+                print("\n", "Confirmation Failed", "\n")
         if opt == "stats":
             print("Access Note Statistics")
+
         if opt == "quit":
             print ("Saving...")
             print("\n")
