@@ -9,6 +9,8 @@
 from note import readNotes,printNotes,sortNotes,findNote
 import json
 import subprocess
+import string
+import re
 from time import time_ns
 
 from datetime import datetime
@@ -208,7 +210,7 @@ def main():
             subprocess.run("cls", shell=True)
             printNotes(notesList)
             print("-"*25, "\n"*3)
-            print("* * Select a Note to Delete* *", "\n")
+            print("* * Select a Note to Delete * *", "\n")
             userSelectionId = input("Input Note ID: ")
 
             foundNote = findNote(userSelectionId, notesList)
@@ -223,7 +225,32 @@ def main():
             else:
                 print("\n", "Confirmation Failed", "\n")
         if opt == "stats":
-            print("Access Note Statistics")
+            subprocess.run("cls", shell=True)
+            print("-"*25,)
+            print("Welcome to note statistics!")
+
+            options=["num", "commonWord"]
+            print(" 1) Number of notes")
+            print(" 2) Most common word")
+            print("\n")
+            choice = options[int(input("Select an Option: "))-1]
+
+            if choice == "num":
+                print("Fetching data...", "\n"*2)
+                print("You have written ", len(notesList), " notes!")
+
+            if choice == "commonWord":
+                wordCount={}
+
+                for note in notesList:
+                    bodyNoPunct = re.sub("[^\w\s]", "", note["body"]) # removes punctuation from each note["body"]
+                    for word in bodyNoPunct.split(): # .split() is necessary to seperate words rather than letters
+                        if word not in wordCount:
+                            wordCount[word]=0 # creates word in dictionary if not already there
+                        wordCount[word]+=1
+                mostCommon = max(wordCount, key=wordCount.get) # max() finds key in dictionary with highest value
+
+                print("\n","Your most frequent word, used ", wordCount[mostCommon], " times, was the word:", mostCommon, "\n")
 
         if opt == "quit":
             print ("Saving...")
