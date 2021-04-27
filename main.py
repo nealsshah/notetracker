@@ -126,7 +126,7 @@ def main():
             newNote = {}
 
             title = input("Title: ")
-            categories = input("Categories: ").split(",")
+            categories = input("Categories: ")
             body = input("Write your note: ")
 
             print ("\n")
@@ -136,7 +136,9 @@ def main():
 
 
             newNote["title"] = title
-            newNote["categories"] = [category.strip() for category in categories]
+            newNote["categories"] = []
+            if categories != "":
+                newNote["categories"] = [category.strip() for category in categories.split(",")] #.split(",") converts to list
             newNote["body"] = body
             newNote["date"] = time
             newNote["id"] = time
